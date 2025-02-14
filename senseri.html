@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine</title>
+    <style>
+        body {
+            background-color: pink;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .envelope {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            margin-top: 100px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            border-radius: 10px;
+        }
+        .popup img {
+            width: 300px;
+            height: auto;
+        }
+        .popup video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .close {
+            display: block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .close img {
+            width: 50px;
+            height: auto;
+        }
+        .message-box {
+            display: none;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Happy Valentine’s Day</h1>
+    <p>กดเพื่อดูรูปน่ะจ๊ะพี่❤️🫶😻</p>
+    <div class="envelope" onclick="openLetter()">
+        <img src="Mail.jpg" width="150" alt="Envelope">
+    </div>
+    
+    <div class="popup" id="popup" onclick="nextMedia()">
+        <img id="popupImage" src="" alt="Popup Image">
+        <video id="popupVideo" controls style="display:none;">
+            <source src="kat10.mp4" type="video/mp4">
+        </video>
+        <button class="close" onclick="nextMedia()">
+            <img src="heart.webp" alt="Next">
+        </button>
+        <audio id="bgMusic" src="Music1.mp3"></audio>
+    </div>
+
+    <div class="message-box" id="messageBox">
+        <h2>อยากบอกอะไรหน่อยไหมจ๊ะเตง</h2>
+        <textarea id="userMessage" rows="4" cols="50" placeholder="พิมพ์ข้อความที่นี่..."></textarea><br><br>
+        <button onclick="sendMessage()">ส่งข้อความ</button>
+    </div>
+    
+    <div class="message-box" id="finalMessage" style="display: none;">
+        <h2>เค้ารักเธอมากๆน้าาาถึงวันนี้ไม่มีไรให้แต่เดี๋ยวปลายเดือนนี้แหละให้ พอตอนนี้มีไรให้เซอร์นิดนึงน่ะคั้บ😘😍🤍</h2>
+    </div>
+
+    <script>
+        // เพิ่มไฟล์รูปและวิดีโอในอาร์เรย์
+        let media = [
+            { type: 'image', src: "kat1.jpg" },
+            { type: 'image', src: "kat2.jpg" },
+            { type: 'image', src: "kat3.jpg" },
+            { type: 'image', src: "kat4.jpg" },
+            { type: 'image', src: "kat5.jpg" },
+            { type: 'image', src: "kat6.jpg" },
+            { type: 'image', src: "kat7.jpg" },
+            { type: 'image', src: "kat8.jpg" },
+            { type: 'image', src: "kat9.jpg" },
+            { type: 'image', src: "kat11.jpg" },
+            { type: 'video', src: "kat12.mp4" },
+            { type: 'image', src: "13.jpg" },
+            { type: 'video', src: "kat10.mp4" },
+        ];
+        
+        let currentIndex = 0;
+        let popup = document.getElementById("popup");
+        let popupImage = document.getElementById("popupImage");
+        let popupVideo = document.getElementById("popupVideo");
+        let bgMusic = document.getElementById("bgMusic");
+
+        function openLetter() {
+            popup.style.display = "block";
+            showMedia();
+            bgMusic.play();
+        }
+
+        // ฟังก์ชันแสดงไฟล์รูปหรือวิดีโอ
+        function showMedia() {
+            let currentMedia = media[currentIndex];
+            if (currentMedia.type === 'image') {
+                popupImage.style.display = "block";
+                popupVideo.style.display = "none";
+                popupImage.src = currentMedia.src;
+            } else if (currentMedia.type === 'video') {
+                popupImage.style.display = "none";
+                popupVideo.style.display = "block";
+                popupVideo.src = currentMedia.src;
+            }
+        }
+
+        // ฟังก์ชันเมื่อคลิกที่ป็อปอัพหรือปุ่มจะไปที่สื่อถัดไป
+        function nextMedia() {
+            currentIndex = (currentIndex + 1) % media.length;
+            showMedia();
+
+            // เมื่อดูครบทั้งหมดแล้ว ให้แสดงกล่องข้อความและปิดป็อปอัพ
+            if (currentIndex === 0) {
+                popup.style.display = "none";  // ปิดป็อปอัพ
+                showMessageBox();  // แสดงกล่องข้อความ
+            }
+        }
+
+        // แสดงกล่องข้อความให้พิมพ์ข้อความ
+        function showMessageBox() {
+            document.getElementById("messageBox").style.display = "block";
+        }
+
+        // ฟังก์ชันส่งข้อความ
+        function sendMessage() {
+            let message = document.getElementById("userMessage").value;
+            if (message.trim() !== "") {
+                document.getElementById("messageBox").style.display = "none";
+                document.getElementById("finalMessage").style.display = "block";
+            } else {
+                alert("ตั้งใจพิมพ์เดะคนอ่านรออ่านอยู่!");
+            }
+        }
+    </script>
+</body>
+</html>
